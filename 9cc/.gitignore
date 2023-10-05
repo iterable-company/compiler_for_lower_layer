@@ -1,2 +1,4 @@
 9cc
-tmp
+tmp*
+a.out
+*.o
