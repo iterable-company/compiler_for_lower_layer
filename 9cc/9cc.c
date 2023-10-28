@@ -208,6 +208,10 @@ Token *new_token(TokenKind kind, Token *cur, char *str, int len) {
     return tok;
 }
 
+bool startswith(char *p, char *q) {
+  return memcmp(p, q, strlen(q)) == 0;
+}
+
 //入力文字列pをトークナイズして返す
 Token *tokenize() {
     char *p = user_input;
@@ -221,7 +225,7 @@ Token *tokenize() {
             continue;
         }
 
-        if (!strncmp(p, "==", 2) || !strncmp(p, "!=", 2) || !strncmp(p, ">=", 2) || !strncmp(p, "<=", 2)) {
+        if (startswith(p, "==") || startswith(p, "!=") || startswith(p, ">=") || startswith(p, "<=")) {
             cur = new_token(TK_RESERVED, cur, p, 2);
             p += 2;
             continue;
