@@ -8,6 +8,8 @@ typedef enum {
     ND_SUB,
     ND_MUL,
     ND_DIV,
+    ND_ASSIGN,
+    ND_LVAR,
     ND_EQ,
     ND_NEQ,
     ND_GT,
@@ -19,9 +21,12 @@ struct Node {
     Node *lhs;
     Node *rhs;
     int val;    // kind が ND_NUMの場合のみ使う
+    int offset;    // kindがND_LVARの場合のみ使う
 };
 
-Node *expr();
+extern Node *code[100];
+
+void program();
 
 void gen(Node *node);
 
