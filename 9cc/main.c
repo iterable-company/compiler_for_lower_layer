@@ -8,6 +8,7 @@
 #include <string.h>
 
 Node *code[100];
+LVar *locals = NULL;
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -28,7 +29,8 @@ int main(int argc, char **argv) {
 
     printf("  push rbp\n");
     printf("  mov rbp, rsp\n");
-    printf("  sub rsp, 208\n"); // 26*8 = 208
+    if (locals)
+        printf("  sub rsp,  %d\n", locals->offset); // 26*8 = 208
  
 
     for (int i = 0; code[i] != NULL; i++) {

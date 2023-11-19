@@ -23,6 +23,15 @@ struct Node {
     int val;    // kind が ND_NUMの場合のみ使う
     int offset;    // kindがND_LVARの場合のみ使う
 };
+typedef struct LVar LVar;
+struct LVar {
+    LVar *next;     //次の変数化NULL
+    char *name;     //変数の名前
+    int len;        //名前の長さ
+    int offset;     //RBPからのオフセット
+};
+//ローカル変数
+extern LVar *locals;
 
 extern Node *code[100];
 

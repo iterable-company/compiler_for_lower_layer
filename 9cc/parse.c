@@ -22,6 +22,14 @@ struct Token {
     int len;        // トークンの文字列長
 };
 
+LVar *find_lvar(Token *tok) {
+    for (LVar *var = locals; var; var = var->next) {
+        if (var->len == tok->len && !memcmp(tok->str, var->name, var->len))
+            return var;
+    }
+    return NULL;
+}
+
 bool startswith(char *p, char *q) {
   return memcmp(p, q, strlen(q)) == 0;
 }
@@ -48,6 +56,18 @@ void error_at(char *loc, char *fmt, ...) {
     vfprintf(stderr, fmt, ap);
     fprintf(stderr, "\n");
     exit(1);
+}
+
+int strtostr(char *p, char **next_start) { 
+    char *tmp = p;
+    if (isalpha(*tmp)) {
+        tmp++;
+        while(isalnum(*tmp)) {
+            tmp++;
+        }
+    }
+    *next_start = tmp;
+    return tmp - p;
 }
 
 //入力文字列pをトークナイズして返す
@@ -80,8 +100,8 @@ Token *tokenize() {
         }
 
         if ('a' <= *p && *p <= 'z') {
-            cur = new_token(TK_IDENT, cur, p++, 1);
-            cur->len = 1;
+            cur = new_token(TK_IDENT, cur, p, 0);
+            cur->len = strtostr(p, &p);
             continue;
         }
 
@@ -276,7 +296,25 @@ Node *primary() {
     }
     Token *tok = consume_ident();
     if (tok) {
-        Node *node = new_node_ident(tok);
+        Node *node = calloc(1, sizeof(Node));
+        node->kind = ND_LVAR;
+
+        LVar *lvar = find_lvar(tok);
+        if (lvar) {
+            node->offset = lvar->offset;
+        } else {
+            lvar = calloc(1, sizeof(LVar));
+            lvar->next = locals;
+            lvar->name = tok->str;
+            lvar->len = tok->len;
+            if (locals) {
+                lvar->offset = locals->offset + 8;
+            } else {
+                lvar->offset = 8;
+            }
+            node->offset = lvar->offset;
+            locals = lvar;
+        }
         return node;
     } else {
         return new_node_num(expect_number());
