@@ -41,5 +41,6 @@ assert 0 "(1+3)==(2*2+1);"
 assert 3 "a=1;b=2;a+b;"
 assert 5 "a=1;g=4;a+g;"
 assert 5 "abc=4;gh=3;abc+abc-gh;"
+assert 7 "abc=4;gh=3;return abc + gh;4;"
 
 echo OK

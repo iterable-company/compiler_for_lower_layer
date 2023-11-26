@@ -10,6 +10,7 @@ typedef enum {
     ND_DIV,
     ND_ASSIGN,
     ND_LVAR,
+    ND_RETURN,
     ND_EQ,
     ND_NEQ,
     ND_GT,
